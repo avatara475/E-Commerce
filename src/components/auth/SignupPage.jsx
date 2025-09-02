@@ -139,7 +139,7 @@ const SignupPage = () => {
               <div className="flex justify-center">
                 <div className="bg-white/20 p-6 rounded-2xl shadow-lg">
                   <img 
-                    src="/images/login.jpg" 
+                    src="/images/jpg/login.jpg" 
                     alt="Sign Up" 
                     className="rounded-xl shadow-md"
                   />
