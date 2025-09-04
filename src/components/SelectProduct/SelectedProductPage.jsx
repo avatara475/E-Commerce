@@ -1,0 +1,254 @@
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useParams } from 'react-router-dom';
+
+const SelectedProductPage = () => {
+  const { id } = useParams();
+  const [selectedImage, setSelectedImage] = useState(0);
+  const [selectedColor, setSelectedColor] = useState('blue');
+  const [selectedSize, setSelectedSize] = useState('M');
+  const [quantity, setQuantity] = useState(1);
+
+  // Mock product data - in a real app, you'd fetch this based on the ID
+  const product = {
+    id: 1,
+    name: "Classic Comfort T-Shirt",
+    category: "Fashion",
+    price: 29.99,
+    originalPrice: 39.99,
+    rating: 4.5,
+    reviewCount: 128,
+    description: "Our classic comfort t-shirt is made from 100% organic cotton for a soft feel against your skin. Perfect for everyday wear, this shirt features a modern fit and exceptional durability.",
+    details: [
+      "100% organic cotton",
+      "Machine washable",
+      "Modern fit",
+      "Available in multiple colors"
+    ],
+    images: [
+      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1566150902887-9679ecc155ba?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
+    ],
+    colors: ["blue", "black", "gray", "white", "red"],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    inStock: true
+  };
+
+  const relatedProducts = [
+    {
+      id: 2,
+      name: "Premium Cotton Shirt",
+      price: 49.99,
+      image: "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+      category: "Fashion"
+    },
+    {
+      id: 3,
+      name: "Slim Fit Jeans",
+      price: 59.99,
+      image: "https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+      category: "Fashion"
+    },
+    {
+      id: 4,
+      name: "Casual Jacket",
+      price: 89.99,
+      image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+      category: "Fashion"
+    }
+  ];
+
+  const incrementQuantity = () => setQuantity(prev => prev + 1);
+  const decrementQuantity = () => setQuantity(prev => (prev > 1 ? prev - 1 : 1));
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+        {/* Product Images */}
+        <div className="space-y-4">
+          <motion.div 
+            className="h-96 md:h-[500px] rounded-lg overflow-hidden bg-gray-100"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <img 
+              src={product.images[selectedImage]} 
+              alt={product.name}
+              className="w-full h-full object-cover"
+            />
+          </motion.div>
+          
+          <div className="grid grid-cols-4 gap-2">
+            {product.images.map((image, index) => (
+              <motion.div 
+                key={index}
+                className={`h-24 rounded-md overflow-hidden cursor-pointer border-2 ${
+                  selectedImage === index ? 'border-blue-500' : 'border-transparent'
+                }`}
+                whileHover={{ scale: 1.05 }}
+                onClick={() => setSelectedImage(index)}
+              >
+                <img 
+                  src={image} 
+                  alt={`Thumbnail ${index + 1}`}
+                  className="w-full h-full object-cover"
+                />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Product Info */}
+        <div className="space-y-6">
+          <div>
+            <span className="text-sm text-gray-500 uppercase">{product.category}</span>
+            <h1 className="text-3xl font-bold text-gray-900 mt-1">{product.name}</h1>
+            
+            <div className="flex items-center mt-3">
+              <div className="flex">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <svg 
+                    key={star} 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    className={`h-5 w-5 ${star <= Math.floor(product.rating) ? 'text-amber-400' : 'text-gray-300'}`} 
+                    viewBox="0 0 20 20" 
+                    fill="currentColor"
+                  >
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+              <span className="text-sm text-gray-500 ml-2">
+                ({product.reviewCount} reviews)
+              </span>
+            </div>
+          </div>
+          
+          <div className="flex items-center space-x-4">
+            <span className="text-3xl font-bold text-gray-900">${product.price}</span>
+            {product.originalPrice && (
+              <span className="text-xl text-gray-500 line-through">${product.originalPrice}</span>
+            )}
+            {product.originalPrice && (
+              <span className="bg-red-100 text-red-800 text-sm font-semibold px-2 py-1 rounded">
+                {Math.round((1 - product.price / product.originalPrice) * 100)}% OFF
+              </span>
+            )}
+          </div>
+          
+          <p className="text-gray-700">{product.description}</p>
+          
+          <div>
+            <h3 className="text-sm font-medium text-gray-900 mb-2">Color</h3>
+            <div className="flex space-x-2">
+              {product.colors.map(color => (
+                <button
+                  key={color}
+                  className={`w-8 h-8 rounded-full border-2 ${
+                    selectedColor === color ? 'border-blue-500' : 'border-gray-300'
+                  }`}
+                  style={{ backgroundColor: color }}
+                  onClick={() => setSelectedColor(color)}
+                  aria-label={`Color: ${color}`}
+                />
+              ))}
+            </div>
+          </div>
+          
+          <div>
+            <h3 className="text-sm font-medium text-gray-900 mb-2">Size</h3>
+            <div className="flex flex-wrap gap-2">
+              {product.sizes.map(size => (
+                <button
+                  key={size}
+                  className={`px-4 py-2 border rounded-md ${
+                    selectedSize === size 
+                      ? 'border-blue-500 bg-blue-50 text-blue-700' 
+                      : 'border-gray-300 text-gray-700 hover:border-gray-400'
+                  }`}
+                  onClick={() => setSelectedSize(size)}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center border rounded-md">
+              <button 
+                className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                onClick={decrementQuantity}
+              >
+                -
+              </button>
+              <span className="px-4 py-2 border-l border-r">{quantity}</span>
+              <button 
+                className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                onClick={incrementQuantity}
+              >
+                +
+              </button>
+            </div>
+            
+            <button className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors font-medium">
+              Add to Cart
+            </button>
+            
+            <button className="p-3 border border-gray-300 rounded-md hover:bg-gray-50">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+            </button>
+          </div>
+          
+          <div className="border-t pt-4">
+            <h3 className="text-sm font-medium text-gray-900 mb-2">Product Details</h3>
+            <ul className="list-disc list-inside space-y-1 text-gray-700">
+              {product.details.map((detail, index) => (
+                <li key={index}>{detail}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      {/* Related Products */}
+      <div className="border-t pt-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">You may also like</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {relatedProducts.map(product => (
+            <motion.div 
+              key={product.id}
+              className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-xl"
+              whileHover={{ y: -5 }}
+            >
+              <div className="h-48 overflow-hidden">
+                <img 
+                  src={product.image} 
+                  alt={product.name}
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+              <div className="p-4">
+                <span className="text-xs text-gray-500 uppercase">{product.category}</span>
+                <h3 className="text-lg font-semibold text-gray-800 mt-1">{product.name}</h3>
+                <div className="flex items-center justify-between mt-3">
+                  <span className="text-lg font-bold text-gray-900">${product.price}</span>
+                  <button className="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                    View Details
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default SelectedProductPage;

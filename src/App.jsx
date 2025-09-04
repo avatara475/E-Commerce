@@ -9,6 +9,8 @@ import { AuthProvider, useAuth } from './components/contexts/authContext'
 import ProtectedRoute from './components/protected/ProtectedRoute'
 import PublicRoute from './components/protected/PublicRoute'
 import FooterNav from './components/FooterNav'
+import SelectedProductPage from './components/SelectProduct/SelectedProductPage'
+
 
 function Layout() {
   const location = useLocation();
@@ -26,6 +28,11 @@ function Layout() {
             <HomePage />
           </ProtectedRoute>
         } />
+        <Route path="/product/:id" element={
+          <ProtectedRoute>
+          <SelectedProductPage />
+          </ProtectedRoute>
+          } />
         <Route path='/login' element={
           <PublicRoute>
             <LoginPage />

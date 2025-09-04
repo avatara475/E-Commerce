@@ -20,7 +20,7 @@ const Footer = () => {
                 />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-gray-900">FreshGrocer</h2>
+                <h2 className="text-xl font-bold text-gray-900">SwiftCart</h2>
                 <p className="text-sm text-gray-600 mt-1">Awesome grocery store website template</p>
               </div>
             </div>
@@ -172,7 +172,7 @@ const Footer = () => {
         {/* Copyright Section */}
         <div className="border-t border-gray-200 mt-8 pt-6 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-500 text-sm mb-4 md:mb-0">
-            &copy; {new Date().getFullYear()} FreshGrocer. All rights reserved.
+            &copy; {new Date().getFullYear()} SwiftCart. All rights reserved.
           </p>
           <div className="flex items-center space-x-4">
             <img src="/images/png/visa.png" alt="Visa" className="h-6" />
