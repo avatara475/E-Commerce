@@ -10,6 +10,9 @@ import ProtectedRoute from './components/protected/ProtectedRoute'
 import PublicRoute from './components/protected/PublicRoute'
 import FooterNav from './components/FooterNav'
 import SelectedProductPage from './components/SelectProduct/SelectedProductPage'
+import MainCategory from './components/Category/pages'
+import AddtocartPage from './components/AddToCart/page/AddtocartPage'
+import WishlistPage from './components/Wishlist/page/WishlistPage'
 
 
 function Layout() {
@@ -31,6 +34,26 @@ function Layout() {
         <Route path="/product/:id" element={
           <ProtectedRoute>
           <SelectedProductPage />
+          </ProtectedRoute>
+          } />
+          <Route path="/category" element={
+          <ProtectedRoute>
+          <MainCategory />
+          </ProtectedRoute>
+          } />
+          <Route path="/category/:categoryName" element={
+          <ProtectedRoute>
+          <MainCategory />
+          </ProtectedRoute>
+          } />
+          <Route path="/wishlist" element={
+          <ProtectedRoute>
+          <WishlistPage/>
+          </ProtectedRoute>
+          } />
+          <Route path="/cart" element={
+          <ProtectedRoute>
+          <AddtocartPage />
           </ProtectedRoute>
           } />
         <Route path='/login' element={

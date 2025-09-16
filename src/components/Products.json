@@ -11,7 +11,14 @@
       "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
       "isNew": true,
       "isBestSeller": false,
-      "colors": ["white", "black", "gray"]
+      "colors": ["white", "black", "gray"],
+      "details": [
+      "100% organic cotton",
+      "Machine washable",
+      "Modern fit",
+      "Available in multiple colors"
+      ],
+      "inStock": true
     },
     {
       "id": 2,
@@ -24,7 +31,14 @@
       "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
       "isNew": false,
       "isBestSeller": true,
-      "colors": ["black", "silver", "blue"]
+      "colors": ["black", "silver", "blue"],
+      "details": [
+      "100% organic cotton",
+      "Machine washable",
+      "Modern fit",
+      "Available in multiple colors"
+      ],
+      "inStock": true
     },
     {
       "id": 3,
@@ -37,7 +51,14 @@
       "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
       "isNew": true,
       "isBestSeller": true,
-      "colors": ["white", "black", "red"]
+      "colors": ["white", "black", "red"],
+      "details": [
+      "100% organic cotton",
+      "Machine washable",
+      "Modern fit",
+      "Available in multiple colors"
+      ],
+      "inStock": true
     },
     {
       "id": 4,
@@ -50,7 +71,14 @@
       "image": "https://images.unsplash.com/photo-1544787219-7f47ccb76574?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
       "isNew": false,
       "isBestSeller": false,
-      "colors": ["brown"]
+      "colors": ["brown"],
+      "details": [
+      "100% organic cotton",
+      "Machine washable",
+      "Modern fit",
+      "Available in multiple colors"
+      ],
+      "inStock": true
     },
     {
       "id": 5,
@@ -63,7 +91,14 @@
       "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
       "isNew": false,
       "isBestSeller": true,
-      "colors": ["brown", "black", "navy"]
+      "colors": ["brown", "black", "navy"],
+      "details": [
+      "100% organic cotton",
+      "Machine washable",
+      "Modern fit",
+      "Available in multiple colors"
+      ],
+      "inStock": true
     },
     {
       "id": 6,
@@ -76,7 +111,14 @@
       "image": "https://images.unsplash.com/photo-1596462502278-27bfdc403348?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
       "isNew": true,
       "isBestSeller": false,
-      "colors": ["clear", "amber"]
+      "colors": ["clear", "amber"],
+      "details": [
+      "100% organic cotton",
+      "Machine washable",
+      "Modern fit",
+      "Available in multiple colors"
+      ],
+      "inStock": true
     },
     {
       "id": 7,
@@ -89,7 +131,14 @@
       "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
       "isNew": false,
       "isBestSeller": true,
-      "colors": ["black", "silver", "gold"]
+      "colors": ["black", "silver", "gold"],
+      "details": [
+      "100% organic cotton",
+      "Machine washable",
+      "Modern fit",
+      "Available in multiple colors"
+      ],
+      "inStock": true
     },
     {
       "id": 8,
@@ -97,12 +146,19 @@
       "category": "Fashion",
       "price": 59.99,
       "originalPrice": 79.99,
-      "rating": 4.2,
+      "rating": 3.2,
       "reviewCount": 76,
       "image": "https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
       "isNew": true,
       "isBestSeller": false,
-      "colors": ["blue", "black", "gray"]
+      "colors": ["blue", "black", "gray"],
+      "details": [
+      "100% organic cotton",
+      "Machine washable",
+      "Modern fit",
+      "Available in multiple colors"
+      ],
+      "inStock": true
     }
   ]
 }

@@ -84,12 +84,12 @@ const Navbar = () => {
     category: {
       title: "category",
       items: [
-        { images:'/images/png/fashion.png',name: "Fashion", link: "/fashion" },
-        { images:'/images/png/electronics.png',name: "Electronics", link: "/electronics" },
-        { images:'/images/png/bags.png',name: "Bags", link: "/bags" },
-        { images:'/images/png/footwear.png',name: "Footwear", link: "/footwear" },
-        { images:'/images/png/groceries.png',name: "Groceries", link: "/groceries" },
-        { images:'/images/png/beauty.png',name: "Beauty", link: "/beauty" }
+        { images:'/images/png/fashion.png',name: "Fashion", link: "/category/fashion" },
+        { images:'/images/png/electronics.png',name: "Electronics", link: "/category/electronics" },
+        { images:'/images/png/bags.png',name: "Bags", link: "/category/bags" },
+        { images:'/images/png/footwear.png',name: "Footwear", link: "/category/footwear" },
+        { images:'/images/png/groceries.png',name: "Groceries", link: "/category/groceries" },
+        { images:'/images/png/beauty.png',name: "Beauty", link: "/category/beauty" }
       ]
     }
   };
@@ -318,7 +318,7 @@ const Navbar = () => {
                   onMouseLeave={() => setHoveredItem(null)}
                 >
                   <Link
-                    to="/fashion"
+                    to="/category/fashion"
                     className="text-gray-700 hover:text-[#0289de] px-3 py-2 font-medium transition-colors flex items-center"
                   >
                     Fashion<MdKeyboardArrowDown />
@@ -337,7 +337,7 @@ const Navbar = () => {
                   onMouseLeave={() => setHoveredItem(null)}
                 >
                   <Link
-                    to="/electronics"
+                    to="/category/electronics"
                     className="text-gray-700 hover:text-[#0289de] px-3 py-2 font-medium transition-colors flex items-center"
                   >
                     Electronics<MdKeyboardArrowDown />
@@ -356,7 +356,7 @@ const Navbar = () => {
                   onMouseLeave={() => setHoveredItem(null)}
                 >
                   <Link
-                    to="/bags"
+                    to="/category/bags"
                     className="text-gray-700 hover:text-[#0289de] px-3 py-2 font-medium transition-colors flex items-center"
                   >
                     Bags<MdKeyboardArrowDown />
@@ -375,7 +375,7 @@ const Navbar = () => {
                   onMouseLeave={() => setHoveredItem(null)}
                 >
                   <Link
-                    to="/footwear"
+                    to="/category/footwear"
                     className="text-gray-700 hover:text-[#0289de] px-3 py-2 font-medium transition-colors flex items-center"
                   >
                     Footwear<MdKeyboardArrowDown />
@@ -388,7 +388,7 @@ const Navbar = () => {
                 </div>
 
                 <Link
-                  to="/groceries"
+                  to="/category/groceries"
                   className="text-gray-700 hover:text-[#0289de] px-3 py-2 font-medium transition-colors"
                 >
                   Groceries
@@ -438,7 +438,7 @@ const Navbar = () => {
               <div className="px-2 pt-2 pb-3 space-y-1">
 
                 <Link
-                  to="/"
+                  to="/category/fashion"
                   className="text-gray-700 hover:text-[#0289de] block px-3 py-2 rounded-md text-base font-medium"
                   onClick={closeMenu}
                 >
@@ -446,7 +446,7 @@ const Navbar = () => {
                 </Link>
                 
                 <Link
-                  to="/"
+                  to="/category/electronics"
                   className="text-gray-700 hover:text-[#0289de] block px-3 py-2 rounded-md text-base font-medium"
                   onClick={closeMenu}
                 >
@@ -454,7 +454,7 @@ const Navbar = () => {
                 </Link>
 
                 <Link
-                  to="/"
+                  to="/category/footwear"
                   className="text-gray-700 hover:text-[#0289de] block px-3 py-2 rounded-md text-base font-medium"
                   onClick={closeMenu}
                 >
@@ -462,7 +462,7 @@ const Navbar = () => {
                 </Link>
 
                 <Link
-                  to="/groceries"
+                  to="/category/bags"
                   className="text-gray-700 hover:text-[#0289de] block px-3 py-2 rounded-md text-base font-medium"
                   onClick={closeMenu}
                 >
@@ -470,19 +470,11 @@ const Navbar = () => {
                 </Link>
 
                 <Link
-                  to="/"
+                  to="/category/groceries"
                   className="text-gray-700 hover:text-[#0289de] block px-3 py-2 rounded-md text-base font-medium"
                   onClick={closeMenu}
                 >
                   Groceries
-                </Link>
-
-                <Link
-                  to="/"
-                  className="text-gray-700 hover:text-[#0289de] block px-3 py-2 rounded-md text-base font-medium"
-                  onClick={closeMenu}
-                >
-                  Bags
                 </Link>
 
                 {user ? (

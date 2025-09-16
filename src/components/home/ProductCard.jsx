@@ -1,6 +1,11 @@
-import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const ProductCard = ({ product }) => {
+  const navigate = useNavigate()
+
+  const handleview=()=>{
+    navigate(`product/${product.id}`)
+  }
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col cursor-pointer">
       <div className="relative">
@@ -78,7 +83,13 @@ const ProductCard = ({ product }) => {
               <span className="text-sm text-gray-500 line-through">${product.originalPrice}</span>
             )}
           </div>
-          <button className="bg-blue-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+           <button className="bg-blue-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors cursor-pointer"
+            onClick={handleview}
+            >
+            view
+          </button>
+          <button className="bg-blue-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+          >
             Add to Cart
           </button>
         </div>
