@@ -21,7 +21,7 @@ const ProfilePage = () => {
 
       {/* Tab Navigation */}
       <div className="border-b border-gray-200 mb-8">
-        <nav className="flex space-x-8">
+        <nav className="flex space-x-5">
           {['profile', 'orders', 'settings', 'wishlist'].map((tab) => (
             <button
               key={tab}

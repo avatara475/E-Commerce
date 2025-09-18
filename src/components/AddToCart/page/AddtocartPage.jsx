@@ -3,6 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { removeFromCart, removeItemCompletely, updateItemQuantity, clearCart } from '../slice/CartSlice';
 import { useDispatch,useSelector } from 'react-redux';
+import { FaPlus } from "react-icons/fa";
+import { FaMinus } from "react-icons/fa";
+import { FaMinusCircle,FaPlusCircle } from "react-icons/fa";
 
 const AddtocartPage = () => {
   const dispatch = useDispatch();
@@ -81,17 +84,17 @@ const AddtocartPage = () => {
                   <div className="flex items-center space-x-4 mt-4 sm:mt-0">
                     <div className="flex items-center border rounded-md">
                       <button 
-                        className="px-3 py-1 text-gray-600 hover:text-gray-800"
+                        className="px-3 py-1 text-gray-600 hover:text-red-600 cursor-pointer"
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
                       >
-                        -
+                        <FaMinusCircle />
                       </button>
                       <span className="px-3 py-1 border-l border-r">{item.quantity}</span>
                       <button 
-                        className="px-3 py-1 text-gray-600 hover:text-gray-800"
+                        className="px-3 py-1 text-gray-600 hover:text-red-600 cursor-pointer"
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
                       >
-                        +
+                        <FaPlusCircle />
                       </button>
                     </div>
                     

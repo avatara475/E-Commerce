@@ -1,9 +1,10 @@
 import { motion } from 'framer-motion';
-import {useState} from 'react'
+import {useState,useRef} from 'react'
 
 
 const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
+   const fileInputRef = useRef(null);
     // Sample user data
   const [userData, setUserData] = useState({
     name: 'John Doe',
@@ -24,6 +25,22 @@ const Profile = () => {
     setUserData(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleAvatarClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Create a URL for the selected image
+      const imageUrl = URL.createObjectURL(file);
+      setUserData(prev => ({ ...prev, avatar: imageUrl }));
+      
+      // In a real app, you would upload the file to your server here
+      console.log('File selected:', file.name);
+    }
+  };
+
   return (
     <motion.div
               initial={{ opacity: 0 }}
@@ -40,11 +57,20 @@ const Profile = () => {
                       alt="Profile"
                       className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
                     />
-                    <button className="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition-colors">
+                    <button 
+                    onClick={handleAvatarClick}
+                    className="absolute bottom-0 right-[3.8rem] bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition-colors cursor-pointer">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.121-1.121A2 2 0 0011.172 3H8.828a2 2 0 00-1.414.586L6.293 4.707A1 1 0 015.586 5H4zm6 9a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
                       </svg>
                     </button>
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleFileChange}
+                      accept="image/*"
+                      className="hidden"
+                    />
                   </div>
                   <p className="text-sm text-gray-500 mt-2 text-center">Member since {userData.joinDate}</p>
                 </div>

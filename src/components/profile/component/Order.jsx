@@ -71,9 +71,9 @@ const Order = () => {
                   </div>
     
                   <div className="border-t pt-4">
-                    <div className="flex items-center space-x-4">
+                    <div className="block md:flex items-center space-x-4">
                       {order.products.map((product, idx) => (
-                        <div key={idx} className="flex items-center space-x-3">
+                        <div key={idx} className="flex items-center space-x-3 mt-5">
                           <img
                             src={product.image}
                             alt={product.name}

@@ -17,6 +17,7 @@ import { useEffect } from 'react'
 import { Provider } from 'react-redux'  
 import store from './store'
 import ProfilePage from './components/profile'
+import AdminPage from './components/Admin/AdminPage'
 
 
 function Layout() {
@@ -67,6 +68,11 @@ function Layout() {
           <Route path="/account" element={
           <ProtectedRoute>
           <ProfilePage />
+          </ProtectedRoute>
+          } />
+          <Route path="/admin" element={
+          <ProtectedRoute>
+          <AdminPage/>
           </ProtectedRoute>
           } />
         <Route path='/login' element={
