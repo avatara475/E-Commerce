@@ -13,6 +13,10 @@ import SelectedProductPage from './components/SelectProduct/SelectedProductPage'
 import MainCategory from './components/Category/pages'
 import AddtocartPage from './components/AddToCart/page/AddtocartPage'
 import WishlistPage from './components/Wishlist/page/WishlistPage'
+import { useEffect } from 'react'
+import { Provider } from 'react-redux'  
+import store from './store'
+import ProfilePage from './components/profile'
 
 
 function Layout() {
@@ -21,6 +25,10 @@ function Layout() {
 
   // Define routes where Navbar & Footer should not be shown
   const hideLayout = ["/login", "/signup"].includes(location.pathname);
+
+  useEffect(()=>{
+    window.scrollTo({ top: 0, left: 0 });
+  })
 
   return (
     <>
@@ -56,6 +64,11 @@ function Layout() {
           <AddtocartPage />
           </ProtectedRoute>
           } />
+          <Route path="/account" element={
+          <ProtectedRoute>
+          <ProfilePage />
+          </ProtectedRoute>
+          } />
         <Route path='/login' element={
           <PublicRoute>
             <LoginPage />
@@ -77,11 +90,13 @@ function Layout() {
 
 function App() {
   return (
+    <Provider store={store}>
     <AuthProvider>
       <Router>
         <Layout />
       </Router>
     </AuthProvider>
+    </Provider>
   );
 }
 

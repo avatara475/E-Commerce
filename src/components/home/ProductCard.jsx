@@ -1,13 +1,54 @@
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { addToCart } from '../AddToCart/slice/CartSlice';
+import { addToWishlist, removeFromWishlist } from '../Wishlist/slice/WishlistSlice';
+import { useDispatch,useSelector } from 'react-redux';
 
 const ProductCard = ({ product }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  
+  // Use optional chaining with default value
+  const wishlistItems = useSelector(state => state.wishlist?.items) || [];
 
-  const handleview=()=>{
-    navigate(`product/${product.id}`)
-  }
+  const isInWishlist = wishlistItems.some(item => item.id === product.id);
+
+  const handleViewClick = () => {
+    navigate(`/product/${product.id}`);
+  };
+
+  const handleAddToCart = (e) => {
+    e.stopPropagation();
+    dispatch(addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+    }));
+  };
+
+  const handleWishlist = (e) => {
+    
+    e.stopPropagation();
+    if (isInWishlist) {
+      dispatch(removeFromWishlist(product.id));
+    } else {
+      dispatch(addToWishlist({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        originalPrice: product.originalPrice,
+        image: product.image,
+        inStock: product.inStock,
+      }));
+    }
+  };
+
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col cursor-pointer">
+    <div 
+      className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col cursor-pointer"
+      onClick={handleViewClick}
+    >
       <div className="relative">
         <img 
           src={product.image} 
@@ -30,8 +71,16 @@ const ProductCard = ({ product }) => {
         </div>
         
         {/* Favorite button */}
-        <button className="absolute top-2 right-2 bg-white p-1.5 rounded-full shadow-md hover:bg-red-50">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 hover:text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <button 
+          className="absolute top-2 right-2 bg-white p-1.5 rounded-full shadow-md hover:bg-red-50"
+          onClick={handleWishlist}
+        >
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            className={`h-5 w-5 ${isInWishlist ? 'text-red-500 fill-red-500' : 'text-gray-400 hover:text-red-500'}`}
+            viewBox="0 0 23 23" 
+            stroke="currentColor"
+          >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
           </svg>
         </button>
@@ -75,7 +124,7 @@ const ProductCard = ({ product }) => {
           </div>
         </div>
         
-        {/* Price and action button */}
+        {/* Price and action buttons */}
         <div className="flex items-center justify-between mt-auto">
           <div className="flex flex-col">
             <span className="text-lg font-bold text-gray-900">${product.price}</span>
@@ -83,15 +132,20 @@ const ProductCard = ({ product }) => {
               <span className="text-sm text-gray-500 line-through">${product.originalPrice}</span>
             )}
           </div>
-           <button className="bg-blue-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors cursor-pointer"
-            onClick={handleview}
+          <div className="flex space-x-2">
+            <button 
+              className="bg-gray-200 text-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-300 transition-colors cursor-pointer"
+              onClick={handleViewClick}
             >
-            view
-          </button>
-          <button className="bg-blue-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
-          >
-            Add to Cart
-          </button>
+              View
+            </button>
+            <button 
+              className="bg-blue-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors cursor-pointer"
+              onClick={handleAddToCart}
+            >
+              Add to Cart
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -1,49 +1,20 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { removeFromCart, removeItemCompletely, updateItemQuantity, clearCart } from '../slice/CartSlice';
+import { useDispatch,useSelector } from 'react-redux';
 
 const AddtocartPage = () => {
-  // Sample cart data - in a real app, this would come from a state management solution
-  const [cartItems, setCartItems] = React.useState([
-    {
-      id: 1,
-      name: "Classic White T-Shirt",
-      price: 29.99,
-      image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
-      quantity: 2,
-      color: "white",
-      size: "M"
-    },
-    {
-      id: 2,
-      name: "Wireless Bluetooth Headphones",
-      price: 89.99,
-      image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
-      quantity: 1,
-      color: "black",
-      size: "One Size"
-    },
-    {
-      id: 3,
-      name: "Running Shoes",
-      price: 79.99,
-      image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
-      quantity: 1,
-      color: "white",
-      size: "US 10"
-    }
-  ]);
+  const dispatch = useDispatch();
+  const { items: cartItems, totalQuantity, totalAmount } = useSelector(state => state.cart);
 
   const updateQuantity = (id, newQuantity) => {
     if (newQuantity < 1) return;
-    
-    setCartItems(cartItems.map(item => 
-      item.id === id ? { ...item, quantity: newQuantity } : item
-    ));
+    dispatch(updateItemQuantity({ id, quantity: newQuantity }));
   };
 
   const removeItem = (id) => {
-    setCartItems(cartItems.filter(item => item.id !== id));
+    dispatch(removeItemCompletely(id));
   };
 
   const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
@@ -59,7 +30,7 @@ const AddtocartPage = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        Shopping Cart
+        Shopping Cart ({totalQuantity} {totalQuantity === 1 ? 'item' : 'items'})
       </motion.h1>
 
       {cartItems.length === 0 ? (
@@ -104,7 +75,7 @@ const AddtocartPage = () => {
                     <p className="text-gray-600 text-sm mt-1">
                       {item.color} • {item.size}
                     </p>
-                    <p className="text-lg font-bold text-gray-900 mt-2">${item.price}</p>
+                    <p className="text-lg font-bold text-gray-900 mt-2">${item.price.toFixed(2)}</p>
                   </div>
                   
                   <div className="flex items-center space-x-4 mt-4 sm:mt-0">
@@ -136,6 +107,19 @@ const AddtocartPage = () => {
                 </motion.div>
               ))}
             </AnimatePresence>
+
+            {/* Clear Cart Button */}
+            {cartItems.length > 0 && (
+              <motion.button
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors"
+                onClick={() => dispatch(clearCart())}
+              >
+                Clear Cart
+              </motion.button>
+            )}
           </div>
           
           {/* Order Summary */}
@@ -149,7 +133,7 @@ const AddtocartPage = () => {
             
             <div className="space-y-3 mb-6">
               <div className="flex justify-between">
-                <span className="text-gray-600">Subtotal</span>
+                <span className="text-gray-600">Subtotal ({totalQuantity} items)</span>
                 <span className="text-gray-800">${subtotal.toFixed(2)}</span>
               </div>
               

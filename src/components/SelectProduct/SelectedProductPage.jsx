@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useParams } from 'react-router-dom';
 import productsData from '../Products.json';
+import { useDispatch,useSelector } from 'react-redux';
+import { addToCart } from '../AddToCart/slice/CartSlice';
+import { addToWishlist,removeFromWishlist } from '../Wishlist/slice/WishlistSlice';
 
 const SelectedProductPage = () => {
   const { id } = useParams();
@@ -11,6 +14,10 @@ const SelectedProductPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch()
+
+  const wishlistItems = useSelector(state => state.wishlist?.items) || []
+  const isInWishlist = product ? wishlistItems.some(item => item.id === product.id) : false
 
   // Find product based on ID from URL
   useEffect(() => {
@@ -27,6 +34,33 @@ const SelectedProductPage = () => {
     }
     setLoading(false);
   }, [id]);
+
+   const handleAddToCart = (e) => {
+      e.stopPropagation();
+      dispatch(addToCart({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+      }));
+    };
+
+      const handleWishlist = (e) => {
+        
+        e.stopPropagation();
+        if (isInWishlist) {
+          dispatch(removeFromWishlist(product.id));
+        } else {
+          dispatch(addToWishlist({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            originalPrice: product.originalPrice,
+            image: product.image,
+            inStock: product.inStock,
+          }));
+        }
+      };
 
   const relatedProducts = [
     {
@@ -207,12 +241,14 @@ const SelectedProductPage = () => {
               </button>
             </div>
             
-            <button className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors font-medium cursor-pointer">
+            <button className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors font-medium cursor-pointer"
+            onClick={handleAddToCart}>
               Add to Cart
             </button>
             
-            <button className="p-3 border border-gray-300 rounded-md hover:bg-gray-50">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <button className="p-3 border border-gray-300 rounded-md hover:bg-gray-50"
+            onClick={handleWishlist}>
+              <svg xmlns="http://www.w3.org/2000/svg" className={isInWishlist?"h-6 w-6 text-red-500 hover:text-red-700 cursor-pointer":"h-6 w-6 text-gray-500 hover:text-red-700 cursor-pointer"} fill={isInWishlist ? "red" : "none"} viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
               </svg>
             </button>

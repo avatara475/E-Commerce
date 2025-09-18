@@ -7,6 +7,7 @@ import { FiSearch, FiUser, FiHeart, FiMenu } from "react-icons/fi";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { HiMiniSquares2X2 } from "react-icons/hi2";
 import { FaHeadset } from "react-icons/fa";
+import { useSelector } from 'react-redux';
 
 const Navbar = () => {
   const { user, signOut } = useAuth();
@@ -14,6 +15,9 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [hoveredItem, setHoveredItem] = useState(null);
+
+  const {  totalQuantity } = useSelector(state => state.cart);
+  const {  totalWishlistQuantity } = useSelector(state => state.wishlist);
 
   const handleLogout = async () => {
     try {
@@ -91,6 +95,14 @@ const Navbar = () => {
         { images:'/images/png/groceries.png',name: "Groceries", link: "/category/groceries" },
         { images:'/images/png/beauty.png',name: "Beauty", link: "/category/beauty" }
       ]
+    },
+    profile: {
+      title: "profile",
+      items: [
+        { images:'/images/png/favourite.png',name: "Wishlist", link: "/wishlist" },
+        { images:'/images/png/profile.png',name: "Profile", link: "/account" },
+        { images:'/images/png/check-out.png',name: "Logout", link: "/" },
+      ]
     }
   };
 
@@ -125,7 +137,7 @@ const Navbar = () => {
   };
 
 
-  const DropdownCategory = ({ category }) => {
+  const DropdownCategory = ({ category,style }) => {
     const data = dropdownData[category];
     
     if (!data) return null;
@@ -136,7 +148,7 @@ const Navbar = () => {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 10 }}
         transition={{ duration: 0.2 }}
-        className="absolute top-full left-0 w-48 bg-white shadow-lg  py-2 z-50 border border-gray-200"
+        className={style}
       >
         {data.items.map((item, index) => (
           
@@ -145,7 +157,7 @@ const Navbar = () => {
             key={index}
             to={item.link}
             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-[#0289de] transition-colors flex justify-between"
-            onClick={closeMenu}
+            onClick={item.link=== "/"?handleLogout:closeMenu}
           >
             <img src={item.images} alt="images"  className='w-7'/>
             {item.name}
@@ -179,17 +191,17 @@ const Navbar = () => {
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="text-sm text-gray-600 hover:text-[#0289de]"
+                    className="text-sm text-gray-600 hover:text-[#0289de] cursor-pointer"
                   >
                     Logout
                   </button>
                 </>
               ) : (
                 <>
-                  <Link to="/login" className="text-sm text-gray-600 hover:text-[#0289de]">
+                  <Link to="/login" className="text-sm text-gray-600 hover:text-[#0289de] ">
                     Login
                   </Link>
-                  <Link to="/signup" className="text-sm text-gray-600 hover:text-[#0289de]">
+                  <Link to="/signup" className="text-sm text-gray-600 hover:text-[#0289de] ">
                     Register
                   </Link>
                 </>
@@ -238,25 +250,31 @@ const Navbar = () => {
               <Link to="/wishlist" className="text-gray-700 hover:text-[#0289de] relative">
                 <FiHeart className="h-6 w-6" />
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  0
+                  {totalWishlistQuantity}
                 </span>
               </Link>
               
               <Link to="/cart" className="text-gray-700 hover:text-[#0289de] relative flex items-center">
                 <TiShoppingCart className="h-6 w-6" />
                 <span className="absolute -top-2 -right-2 bg-[#0289de] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  0
+                  {totalQuantity}
                 </span>
                 <span className="ml-1 hidden lg:block">Cart</span>
               </Link>
 
               {user && (
-                <div className="flex items-center ml-4">
-                  <div className="w-8 h-8 bg-[#0289de] rounded-full flex items-center justify-center">
+                <div className="flex items-center ml-4 relative group cursor-pointer "
+                onClick={()=>hoveredItem==='profile'?setHoveredItem(null) : setHoveredItem('profile')}>
+                  <div className="w-8 h-8 bg-[#0289de] rounded-full flex items-center justify-center border border-[#0289de] hover:border-blue-900">
                     <span className="text-white text-sm font-medium">
                       {user.email ? user.email.charAt(0).toUpperCase() : 'U'}
                     </span>
                   </div>
+                  <AnimatePresence >
+                    {hoveredItem === 'profile' && (
+                      <DropdownCategory category="profile"  style="absolute top-full ml-[-10rem] mt-1 w-48 bg-white shadow-lg  py-2 z-50 border border-gray-200"/>
+                    )}
+                </AnimatePresence>
                 </div>
               )}
             </div>
@@ -284,7 +302,7 @@ const Navbar = () => {
               <Link to="/cart" className="text-gray-700 relative">
                 <TiShoppingCart className="h-6 w-6" />
                 <span className="absolute -top-2 -right-2 bg-[#0289de] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  0
+                  {totalQuantity}
                 </span>
               </Link>
               
@@ -296,8 +314,6 @@ const Navbar = () => {
             <div className="flex items-center justify-evenly space-x-8">
               <div 
               className="relative group"
-                  // onMouseEnter={() => setHoveredItem('category')}
-                  // onMouseLeave={() => setHoveredItem(null)}
                   onClick={()=>hoveredItem==='category'?setHoveredItem(null) : setHoveredItem('category')}
                   >
                 <button className='bg-[#0289de] hover:bg-[#007ac7] text-white rounded p-2 cursor-pointer flex items-center mx-3 text-[12px] lg:text-md'>
@@ -305,9 +321,9 @@ const Navbar = () => {
                 </button>
                 <AnimatePresence>
                     {hoveredItem === 'category' && (
-                      <DropdownCategory category="category"  />
+                      <DropdownCategory category="category" style="absolute top-full ml-[-0.2rem] mt-1 w-48 bg-white shadow-lg  py-2 z-50 border border-gray-200"  />
                     )}
-                  </AnimatePresence>
+                </AnimatePresence>
               </div>
 
               <div className='text-sm flex'>
