@@ -6,7 +6,7 @@ const AdminPage = () => {
   return (
     <div className='min-h-screen'>
         <Chart/>
-        {/* <Sample/> */}
+        <Sample/>
     </div>
   )
 }

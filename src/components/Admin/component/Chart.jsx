@@ -5,6 +5,7 @@ const Chart = () => {
   const [timePeriod, setTimePeriod] = useState('monthly');
   const [chartType, setChartType] = useState('monthly'); // For second chart
 
+
   // Bar Chart Data
   const barChartOptions = {
     chart: {

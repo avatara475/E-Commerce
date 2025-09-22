@@ -18,6 +18,7 @@ import { Provider } from 'react-redux'
 import store from './store'
 import ProfilePage from './components/profile'
 import AdminPage from './components/Admin/AdminPage'
+import AddProduct from './components/Admin/pages/AddProduct'
 
 
 function Layout() {
@@ -73,6 +74,11 @@ function Layout() {
           <Route path="/admin" element={
           <ProtectedRoute>
           <AdminPage/>
+          </ProtectedRoute>
+          } />
+          <Route path="/admin/addproduct" element={
+          <ProtectedRoute>
+          <AddProduct/>
           </ProtectedRoute>
           } />
         <Route path='/login' element={

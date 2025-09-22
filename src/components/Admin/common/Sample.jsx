@@ -7,6 +7,15 @@ const Sample = () => {
   });
 
   const [todos, setTodos] = useState([]); 
+    const[count,setCount]=useState(0)
+
+    const handleIncrement =()=>{
+      setCount(count+1)
+    }
+
+    const handleDecrement=()=>{
+      setCount(count-1)
+    }
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -54,6 +63,10 @@ const Sample = () => {
           </li>
         ))}
       </ul>
+
+      <button onClick={handleIncrement} >+</button>
+      <p>{count}</p>
+      <button onClick={handleDecrement} disabled={count===0}>-</button>
     </div>
   );
 };
