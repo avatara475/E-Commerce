@@ -19,6 +19,7 @@ import store from './store'
 import ProfilePage from './components/profile'
 import AdminPage from './components/Admin/AdminPage'
 import AddProduct from './components/Admin/pages/AddProduct'
+import ShowReview from './components/Admin/pages/ShowReview'
 
 
 function Layout() {
@@ -79,6 +80,11 @@ function Layout() {
           <Route path="/admin/addproduct" element={
           <ProtectedRoute>
           <AddProduct/>
+          </ProtectedRoute>
+          } />
+          <Route path="/admin/review" element={
+          <ProtectedRoute>
+          <ShowReview/>
           </ProtectedRoute>
           } />
         <Route path='/login' element={

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 const Sample = () => {
   const [formData, setFormData] = useState({
@@ -7,7 +8,9 @@ const Sample = () => {
   });
 
   const [todos, setTodos] = useState([]); 
-    const[count,setCount]=useState(0)
+  const[count,setCount]=useState(0)
+  const[apiData,setApiData]=useState([])
+  const[query,setQuery]=useState("");
 
     const handleIncrement =()=>{
       setCount(count+1)
@@ -33,8 +36,31 @@ const Sample = () => {
     setFormData({ title: "", content: "" }); // reset form
   };
 
+
+  useEffect(()=>{
+   const getData=async()=>{
+    try {
+      const response = await axios.get("https://jsonplaceholder.typicode.com/posts");
+      setApiData(response.data)
+      console.log(response)
+    } catch (error) {
+      console.log(error);
+    }
+   }
+   getData();
+  },[])
+
+  const filterData = apiData.filter(u=>{
+    return (
+      u.title.toLowerCase().includes(query.toLowerCase()) ||
+      u.body.toLowerCase().includes(query.toLowerCase()) ||
+      String(u.id).toLowerCase().includes(query.toLowerCase())
+      )
+  })
+
   return (
     <div>
+      <div className="todo-application">
       <h1>To-Do List</h1>
       <form onSubmit={handleSubmit}>
         <input
@@ -63,10 +89,29 @@ const Sample = () => {
           </li>
         ))}
       </ul>
+      </div>
 
+      <div className="counter application">
       <button onClick={handleIncrement} >+</button>
       <p>{count}</p>
       <button onClick={handleDecrement} disabled={count===0}>-</button>
+      </div>
+
+
+
+    <input type="text" value={query} onChange={(e)=>setQuery(e.target.value)}/>
+        {/* data comes from Api */}
+      <div className="APi Data">
+          {
+            filterData.slice(0,10).map((product,index)=>(
+              <ul key={index} className="border border-amber-600 text-center">
+                <li>ID:-{product.id}</li>
+                <li>TITLE:-{product.title}</li>
+                <li>BODY:-{product.body}</li>
+              </ul>
+            ))
+          }
+      </div>
     </div>
   );
 };

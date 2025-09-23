@@ -5,6 +5,12 @@ import productsData from '../Products.json';
 import { useDispatch,useSelector } from 'react-redux';
 import { addToCart } from '../AddToCart/slice/CartSlice';
 import { addToWishlist,removeFromWishlist } from '../Wishlist/slice/WishlistSlice';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import { Rating } from '@smastrom/react-rating';
+import '@smastrom/react-rating/style.css';
+import { toast,ToastContainer } from 'react-toastify';
+import reviews from './review.json'
 
 const SelectedProductPage = () => {
   const { id } = useParams();
@@ -18,6 +24,27 @@ const SelectedProductPage = () => {
 
   const wishlistItems = useSelector(state => state.wishlist?.items) || []
   const isInWishlist = product ? wishlistItems.some(item => item.id === product.id) : false
+
+  const validationSchema = Yup.object({
+    review:Yup.string()
+    .min(5,"review must be atleast 5 character")
+    .required("Product Review is Require"),
+    rating:Yup.number()
+    .required("Product Rating is Required")
+  })
+
+  const formik = useFormik({
+    initialValues:{
+      review:"",
+      rating:0
+    },
+    validationSchema,
+    onSubmit:(values)=>{
+      console.log("form submited",values)
+      toast.success("Form Submited")
+    }
+  })
+    
 
   // Find product based on ID from URL
   useEffect(() => {
@@ -108,6 +135,7 @@ const SelectedProductPage = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
+      <ToastContainer position="top-right" autoClose={1000} hideProgressBar={false} newestOnTop closeOnClick pauseOnHover />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
         {/* Product Images */}
         <div className="space-y-4">
@@ -265,6 +293,92 @@ const SelectedProductPage = () => {
             </div>
           )}
         </div>
+      </div>
+
+      <div className='review'>
+        <h1 className='text-2xl font-bold mb-3'>Review</h1>
+        <form onSubmit={formik.handleSubmit}>
+                <div className='flex gap-4 mb-5'>
+                    <input type='text' placeholder="Enter Review Here" 
+                    name="review" 
+                    value={formik.values.review} 
+                    onChange={formik.handleChange} 
+                    onBlur={formik.handleBlur}
+                    className={`w-full border border-rounded rounded border-[#0289de] focus:outline-2 focus:outline-offset-2 ${formik.touched.review && formik.errors.review ? 'focus:outline-red-500':'focus:outline-blue-500'}`}
+                    />
+          
+                    <button  type="submit" className='border rounded cursor-pointer p-2 border-blue-700 bg-green-700 hover:bg-green-800 text-white'>Submit</button>
+                </div>
+                {formik.touched.review && formik.errors.review && (
+                      <div className="text-red-500 text-sm mt-[-1rem] mb-3">{formik.errors.review}</div>
+                )}
+                {/* rating  */}
+                <div className='mb-3'>
+                  <div className="flex items-center">
+                      <Rating
+                      style={{ maxWidth: 150 }}
+                      value={formik.values.rating}
+                      onBlur={formik.handleBlur}
+                      onChange={(value) => {
+                        formik.setFieldValue('rating', value)
+                      }}
+                      halfFillMode="svg"
+                      />
+                      <span className="ml-3 text-gray-600 bg-amber-100 px-2 py-1 rounded-md">
+                      {formik.values.rating.toFixed(1)}/5.0
+                      </span>
+                  </div>
+                  {formik.touched.rating && formik.errors.rating && (
+                      <div className="text-red-500 text-sm mt-1">{formik.errors.rating}</div>
+                  )}
+                </div>
+      </form>
+
+                  {/* list all reviews  */}
+      {
+        reviews.review.slice(0,5).map((review, index) => (
+          <div key={index} className="border-l-4 border-blue-500 pl-4 py-3 mb-3">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                  <span className="text-blue-600 font-semibold text-xs">
+                    {review.userName ? review.userName.charAt(0).toUpperCase() : 'U'}
+                  </span>
+                </div>
+                <span className="font-medium text-gray-900 text-sm">
+                  {review.userName || 'Anonymous'}
+                </span>
+              </div>
+              
+              <div className="flex items-center space-x-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <svg 
+                    key={star} 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    className={`h-4 w-4 ${star <= review.rating ? 'text-amber-400' : 'text-gray-300'}`} 
+                    viewBox="0 0 20 20" 
+                    fill="currentColor"
+                  >
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+            </div>
+            
+            <p className="text-gray-700 text-sm mb-2">{review.review}</p>
+            
+            <div className="flex items-center justify-between text-xs text-gray-500">
+              <span>
+                {review.date ? new Date(review.date).toLocaleDateString() : 'Recently'}
+              </span>
+              {review.verified && (
+                <span className="text-green-600">✓ Verified Purchase</span>
+              )}
+            </div>
+          </div>
+        ))
+      }
+
       </div>
       
       {/* Related Products */}

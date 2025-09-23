@@ -4,8 +4,6 @@ import * as Yup from 'yup';
 import { Rating } from '@smastrom/react-rating';
 import '@smastrom/react-rating/style.css';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { supabase } from '../../lib/supabaseClient'
 
 const AddProduct = () => {
   // Validation schema using Yup
@@ -58,72 +56,15 @@ const AddProduct = () => {
       inStock: true
     },
     validationSchema,
-    onSubmit: async (values, { setSubmitting, resetForm }) => {
-      setSubmitting(true);
-      try {
-        // 1. Upload image to Supabase Storage
-        let imageUrl = '';
-        if (values.image) {
-          const fileExt = values.image.name.split('.').pop();
-          const fileName = `${Math.random()}.${fileExt}`;
-          const filePath = `product-images/${fileName}`;
-
-          const { error: uploadError } = await supabase.storage
-            .from('products')
-            .upload(filePath, values.image);
-
-          if (uploadError) {
-            throw uploadError;
-          }
-
-          // Get public URL
-          const { data: urlData } = supabase.storage
-            .from('products')
-            .getPublicUrl(filePath);
-
-          imageUrl = urlData.publicUrl;
-        }
-
-        // 2. Insert product data into Supabase table
-        const { data, error } = await supabase
-          .from('products')
-          .insert([
-            {
-              name: values.name,
-              category: values.category,
-              price: values.price,
-              original_price: values.originalPrice,
-              rating: values.rating,
-              image: imageUrl,
-              is_new: values.isNew,
-              is_best_seller: values.isBestSeller,
-              colors: values.colors,
-              details: values.details,
-              in_stock: values.inStock,
-              created_at: new Date().toISOString()
-            }
-          ])
-          .select();
-
-        if (error) {
-          throw error;
-        }
-
-        toast.success('Product added successfully!');
-        resetForm();
-        setImagePreview(null);
-      } catch (error) {
-        console.error('Error adding product:', error);
-        toast.error('Failed to add product. Please try again.');
-      } finally {
-        setSubmitting(false);
-      }
+    onSubmit: (values) => {
+      console.log('Form submitted:', values);
+      // Handle form submission here (API call, etc.)
+      toast.success('Product added successfully!');
     },
   });
 
   // State for image preview
   const [imagePreview, setImagePreview] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Handle image upload
   const handleImageUpload = (event) => {
@@ -138,18 +79,6 @@ const AddProduct = () => {
     }
   };
 
-  // Custom styles for rating component
-  const customStyles = {
-    itemShapes: [
-      '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>',
-      '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>',
-      '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>',
-      '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>',
-      '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>'
-    ],
-    activeFillColor: '#f59e0b',
-    inactiveFillColor: '#d1d5db',
-  };
 
   // Color options
   const colorOptions = [
@@ -179,13 +108,15 @@ const AddProduct = () => {
     formik.setFieldValue('colors', currentColors);
   };
 
+
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-8 px-4 sm:px-6 lg:px-8">
-      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop closeOnClick pauseOnHover />
+    <div className="min-h-screen bg-gradient-to-br  py-8 px-4 sm:px-6 lg:px-8">
+        <ToastContainer position="top-right" autoClose={1000} hideProgressBar={false} newestOnTop closeOnClick pauseOnHover />
       <div className="max-w-8xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
         <div className="bg-[#0289de] py-4 px-6">
           <h1 className="text-2xl font-bold text-white">Add New Product</h1>
-          <p className="text-blue-100">Fill in the details below to add a new product</p>
+          <p className="text-amber-100">Fill in the details below to add a new product</p>
         </div>
         
         <form onSubmit={formik.handleSubmit} className="p-6 space-y-6">
@@ -204,7 +135,7 @@ const AddProduct = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.name}
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:border-blue-500 transition ${formik.touched.name && formik.errors.name ? "border-red-700 focus:ring-red-500" : "border-gray-300 focus:ring-blue-500"}`}
+                  className={`w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2  focus:border-blue-500 transition ${formik.touched.name && formik.errors.name ? "border-red-700 focus:ring-red-500":"border-black focus:ring-blue-500"}`}
                   placeholder="Enter Product Name"
                 />
                 {formik.touched.name && formik.errors.name && (
@@ -223,7 +154,7 @@ const AddProduct = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.category}
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:border-blue-500 transition ${formik.touched.category && formik.errors.category ? "border-red-700 focus:ring-red-500" : "border-gray-300 focus:ring-blue-500"}`}
+                  className={`w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2  focus:border-blue-500 transition ${formik.touched.category && formik.errors.category ? "border-red-700 focus:ring-red-500":"border-black focus:ring-blue-500"}`}
                 >
                   <option value="">Select a category</option>
                   <option value="clothing">Clothing</option>
@@ -250,7 +181,7 @@ const AddProduct = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.price}
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:border-blue-500 transition ${formik.touched.price && formik.errors.price ? "border-red-700 focus:ring-red-500" : "border-gray-300 focus:ring-blue-500"}`}
+                    className={`w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:border-blue-500 transition ${formik.touched.price && formik.errors.price ? "border-red-700 focus:ring-red-500":"border-black focus:ring-blue-500"}`}
                     placeholder="0.00"
                     step="0.01"
                   />
@@ -270,9 +201,10 @@ const AddProduct = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.originalPrice}
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:border-blue-500 transition ${formik.touched.originalPrice && formik.errors.originalPrice ? "border-red-700 focus:ring-red-500" : "border-gray-300 focus:ring-blue-500"}`}
+                    className={`w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2  focus:border-blue-500 transition ${formik.touched.originalPrice && formik.errors.originalPrice ? "border-red-700 focus:ring-red-500":"border-black focus:ring-blue-500"}`}
                     placeholder="0.00"
                     step="0.01"
+                    
                   />
                   {formik.touched.originalPrice && formik.errors.originalPrice && (
                     <div className="text-red-500 text-sm mt-1">{formik.errors.originalPrice}</div>
@@ -280,48 +212,28 @@ const AddProduct = () => {
                 </div>
               </div>
 
-              {/* Rating */}
-              {/* <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Rating *
-                </label>
-                <div className="flex items-center">
-                  <Rating
-                    style={{ maxWidth: 150 }}
-                    value={formik.values.rating}
-                    onChange={(value) => formik.setFieldValue('rating', value)}
-                    halfFillMode="svg"
-                    itemStyles={customStyles}
-                  />
-                  <span className="ml-3 text-gray-600 bg-amber-100 px-2 py-1 rounded-md">
-                    {formik.values.rating.toFixed(1)}/5.0
-                  </span>
-                </div>
-                {formik.touched.rating && formik.errors.rating && (
-                  <div className="text-red-500 text-sm mt-1">{formik.errors.rating}</div>
-                )}
-              </div> */}
 
-              {/* Rating */}
-                          <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Rating *
-                          </label>
-                          <div className="flex items-center">
-                              <Rating
-                              style={{ maxWidth: 150 }}
-                              value={formik.values.rating}
-                              onChange={(value) => formik.setFieldValue('rating', value)}
-                              halfFillMode="svg"
-                              />
-                              <span className="ml-3 text-gray-600 bg-amber-100 px-2 py-1 rounded-md">
-                              {formik.values.rating.toFixed(1)}/5.0
-                              </span>
-                          </div>
-                          {formik.touched.rating && formik.errors.rating && (
-                              <div className="text-red-500 text-sm mt-1">{formik.errors.rating}</div>
-                          )}
-                          </div>
+            {/* Rating */}
+            <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+                Rating *
+            </label>
+            <div className="flex items-center">
+                <Rating
+                style={{ maxWidth: 150 }}
+                value={formik.values.rating}
+                onChange={(value) => formik.setFieldValue('rating', value)}
+                halfFillMode="svg"
+                />
+                <span className="ml-3 text-gray-600 bg-amber-100 px-2 py-1 rounded-md">
+                {formik.values.rating.toFixed(1)}/5.0
+                </span>
+            </div>
+            {formik.touched.rating && formik.errors.rating && (
+                <div className="text-red-500 text-sm mt-1">{formik.errors.rating}</div>
+            )}
+            </div>
+                
 
               {/* Colors Selection */}
               <div>
@@ -333,7 +245,7 @@ const AddProduct = () => {
                     <div
                       key={color.value}
                       onClick={() => handleColorSelect(color.value)}
-                      className={`cursor-pointer rounded-full p-1 border-2 ${formik.values.colors.includes(color.value) ? 'border-blue-500' : 'border-gray-300'} ${formik.touched.colors && formik.errors.colors ? "border-red-700" : ""}`}
+                      className={`cursor-pointer rounded-full p-1 border-2 ${formik.values.colors.includes(color.value) ? 'border-blue-500' : 'border-gray-300'}   ${formik.touched.colors && formik.errors.colors ? "border-red-700 focus:ring-red-500":" focus:ring-blue-500"}`}
                     >
                       <div className={`w-8 h-8 rounded-full ${color.bgColor}`} title={color.name}></div>
                     </div>
@@ -353,7 +265,7 @@ const AddProduct = () => {
                   Product Image *
                 </label>
                 <div className="flex items-center justify-center w-full">
-                  <label className={`flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer transition ${formik.touched.image && formik.errors.image ? "border-red-700 hover:border-red-800" : "border-gray-300 hover:border-blue-500"}`}>
+                  <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition">
                     {imagePreview ? (
                       <img src={imagePreview} alt="Preview" className="w-full h-full object-cover rounded-lg" />
                     ) : (
@@ -372,6 +284,7 @@ const AddProduct = () => {
                       className="hidden" 
                       onChange={handleImageUpload} 
                       accept="image/*" 
+                      
                     />
                   </label>
                 </div>
@@ -392,7 +305,7 @@ const AddProduct = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.details}
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:border-blue-500 transition ${formik.touched.details && formik.errors.details ? "border-red-700 focus:ring-red-500" : "border-gray-300 focus:ring-blue-500"}`}
+                  className={`w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition ${formik.touched.details && formik.errors.details ? "border-red-700 focus:ring-red-500":"border-black focus:ring-blue-500"}`}
                   placeholder="Enter product details (features, description, etc.)"
                 ></textarea>
                 {formik.touched.details && formik.errors.details && (
@@ -423,7 +336,7 @@ const AddProduct = () => {
                     name="isBestSeller"
                     onChange={formik.handleChange}
                     checked={formik.values.isBestSeller}
-                    className="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    className="h-5 w-5 text-amber-600 focus:ring-blue-500 border-gray-300 rounded"
                   />
                   <label htmlFor="isBestSeller" className="ml-3 block text-sm text-gray-900 font-medium">
                     Mark as Best Seller
@@ -437,7 +350,7 @@ const AddProduct = () => {
                     name="inStock"
                     onChange={formik.handleChange}
                     checked={formik.values.inStock}
-                    className="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    className="h-5 w-5 text-amber-600 focus:ring-blue-500 border-gray-300 rounded"
                   />
                   <label htmlFor="inStock" className="ml-3 block text-sm text-gray-900 font-medium">
                     Product is in Stock
@@ -451,10 +364,9 @@ const AddProduct = () => {
           <div className="pt-4 border-t border-gray-200">
             <button
               type="submit"
-              disabled={formik.isSubmitting}
-              className="w-full bg-[#0289de] text-white py-3 px-4 rounded-lg font-medium hover:bg-[#007ac7] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-[#0289de] text-white py-3 px-4 rounded-lg font-medium hover:bg-[#007ac7] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition cursor-pointer"
             >
-              {formik.isSubmitting ? 'Adding Product...' : 'Add Product'}
+              Add Product
             </button>
           </div>
         </form>
