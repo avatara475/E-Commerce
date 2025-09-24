@@ -4,6 +4,7 @@ import CommonChart from '../common/CommonChart';
 const Chart = () => {
   const [timePeriod, setTimePeriod] = useState('monthly');
   const [chartType, setChartType] = useState('monthly'); // For second chart
+   const [lineChartType, setLineChartType] = useState('monthly'); // For line chart
 
 
   // Bar Chart Data
@@ -70,6 +71,65 @@ const Chart = () => {
     ? [30, 40, 35, 50, 49, 60, 45, 65, 20, 33, 55, 25]
     : [120, 150, 180, 200];
 
+
+    // Line Chart Data
+  const lineChartOptions = {
+    chart: {
+      type: 'line',
+      height: 350,
+      toolbar: {
+        show: true
+      }
+    },
+    xaxis: {
+      categories: lineChartType === 'monthly' 
+        ? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] 
+        : ['Q1', 'Q2', 'Q3', 'Q4']
+    },
+    yaxis: {
+      title: {
+        text: "Revenue ($)",
+      },
+    },
+    stroke: {
+      curve: 'smooth',
+      width: 3
+    },
+    markers: {
+      size: 5,
+    },
+    colors: ['#00E396', '#FF4560'],
+    grid: {
+      borderColor: '#e7e7e7',
+      row: {
+        colors: ['#f3f3f3', 'transparent'],
+        opacity: 0.5
+      },
+    }
+  };
+
+  const lineChartSeries = lineChartType === 'monthly' 
+    ? [
+        {
+          name: 'Revenue',
+          data: [4500, 5200, 4800, 6100, 5800, 7200, 6800, 7900, 7500, 8200, 7800, 9000]
+        },
+        {
+          name: 'Profit',
+          data: [2200, 2800, 2500, 3200, 3000, 3800, 3500, 4200, 4000, 4500, 4200, 4800]
+        }
+      ]
+    : [
+        {
+          name: 'Revenue',
+          data: [14500, 16800, 23200, 25000]
+        },
+        {
+          name: 'Profit',
+          data: [7500, 10300, 11700, 13500]
+        }
+      ];
+
   const handleTimePeriodClick = (index) => {
     const periods = ['monthly', 'quarterly'];
     setTimePeriod(periods[index]);
@@ -78,6 +138,11 @@ const Chart = () => {
   const handleChartTypeClick = (index) => {
     const types = ['monthly', 'quarterly'];
     setChartType(types[index]);
+  };
+
+   const handleLineChartTypeClick = (index) => {
+    const types = ['monthly', 'quarterly'];
+    setLineChartType(types[index]);
   };
 
   return (
@@ -92,15 +157,16 @@ const Chart = () => {
         className="mt-5"
       />
 
-    <div className='block lg:flex justify-between'>
+    <div className='block lg:flex justify-between gap-5'>
       {/* Second Chart - Pie Chart */}
+       {/* Line Chart */}
       <CommonChart
-        title="Sales Distribution - Pie Chart"
-        options={pieChartOptions}
-        series={pieChartSeries}
+        title="Revenue & Profit Trend - Line Chart"
+        options={lineChartOptions}
+        series={lineChartSeries}
         subCategory={['Monthly', 'Quarterly']}
-        onSubCategoryClick={handleChartTypeClick}
-        className="mt-5"
+        onSubCategoryClick={handleLineChartTypeClick}
+        className="mt-8 w-full"
       />
 
       <CommonChart
@@ -109,16 +175,7 @@ const Chart = () => {
         series={pieChartSeries}
         subCategory={['Monthly', 'Quarterly']}
         onSubCategoryClick={handleChartTypeClick}
-        className="mt-5"
-      />
-
-      <CommonChart
-        title="Sales Distribution - Pie Chart"
-        options={pieChartOptions}
-        series={pieChartSeries}
-        subCategory={['Monthly', 'Quarterly']}
-        onSubCategoryClick={handleChartTypeClick}
-        className="mt-5"
+        className="mt-5 w-full"
       />
       </div>
     </div>

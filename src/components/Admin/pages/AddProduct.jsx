@@ -180,9 +180,9 @@ const AddProduct = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-8 px-4 sm:px-6 lg:px-8 ">
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop closeOnClick pauseOnHover />
-      <div className="max-w-8xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+      <div className="max-w-8xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden max-w-[100rem]">
         <div className="bg-[#0289de] py-4 px-6">
           <h1 className="text-2xl font-bold text-white">Add New Product</h1>
           <p className="text-blue-100">Fill in the details below to add a new product</p>

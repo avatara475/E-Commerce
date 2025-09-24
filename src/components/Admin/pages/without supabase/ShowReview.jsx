@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { supabase } from '../../lib/supabaseClient';
-import productsData from '../../Products.json'; // Import your products JSON file
+import reviewsData from '../../SelectProduct/review.json'; // Import from review.json
+import productsData from '../../Products.json'; // Import products for additional info
 
 const ShowReview = () => {
   const [reviews, setReviews] = useState([]);
@@ -9,75 +9,25 @@ const ShowReview = () => {
   const [filterRating, setFilterRating] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
 
-  // Function to get product details from JSON file by product_id
-  const getProductDetails = (productId) => {
-    const product = productsData.products.find(p => p.id === productId);
-    if (product) {
-      return {
-        name: product.name,
-        image: product.image,
-        category: product.category,
-        price: product.price,
-        originalPrice: product.originalPrice
-      };
-    }
-    // Return default values if product not found
-    return {
-      name: `Product #${productId}`,
-      image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
-      category: 'Unknown Category',
-      price: 0,
-      originalPrice: null
-    };
-  };
-
-  // Fetch all reviews from Supabase and match with products from JSON
-  const fetchAllReviews = async () => {
-    try {
-      setLoading(true);
-      
-      // Fetch reviews from Supabase
-      const { data, error } = await supabase
-        .from('product_reviews')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        throw error;
-      }
-
-      // Format the data and match with products from JSON
-      const formattedReviews = data.map(review => {
-        const productDetails = getProductDetails(review.product_id);
-        
-        return {
-          id: review.id,
-          productId: review.product_id,
-          userName: review.user_name,
-          userEmail: review.user_email,
-          rating: review.rating,
-          review: review.review_text,
-          date: review.created_at,
-          verified: review.verified_purchase,
-          productName: productDetails.name,
-          productImage: productDetails.image,
-          productCategory: productDetails.category,
-          productPrice: productDetails.price,
-          productOriginalPrice: productDetails.originalPrice
-        };
-      });
-
-      setReviews(formattedReviews);
-    } catch (error) {
-      console.error('Error fetching reviews from Supabase:', error);
-      setReviews([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // Extract reviews from review.json
   useEffect(() => {
-    fetchAllReviews();
+    if (reviewsData && reviewsData.review && Array.isArray(reviewsData.review)) {
+      // Add mock data for missing fields (since your review.json has limited data)
+      const enhancedReviews = reviewsData.review.map(review => ({
+        ...review,
+        userName: `User${review.id}`, // Add mock username
+        date: new Date(Date.now() - Math.random() * 10000000000).toISOString(), // Add mock date
+        verified: Math.random() > 0.3, // Random verified status
+        productId: Math.floor(Math.random() * productsData.products.length) + 1, // Random product ID
+        productName: productsData.products[Math.floor(Math.random() * productsData.products.length)]?.name || 'Unknown Product',
+        productImage: productsData.products[Math.floor(Math.random() * productsData.products.length)]?.image || '',
+        productCategory: productsData.products[Math.floor(Math.random() * productsData.products.length)]?.category || 'General',
+        productPrice: productsData.products[Math.floor(Math.random() * productsData.products.length)]?.price || 0
+      }));
+      
+      setReviews(enhancedReviews);
+    }
+    setLoading(false);
   }, []);
 
   // Filter reviews by rating
@@ -235,21 +185,13 @@ const ShowReview = () => {
                         src={review.productImage} 
                         alt={review.productName}
                         className="w-16 h-16 object-cover rounded-lg"
-                        onError={(e) => {
-                          e.target.src = 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80';
-                        }}
                       />
                       <div>
                         <h4 className="font-semibold text-gray-900 text-sm">
                           {review.productName}
                         </h4>
                         <p className="text-sm text-gray-600">{review.productCategory}</p>
-                        <div className="flex items-center space-x-2">
-                          <span className="text-sm font-bold text-blue-600">${review.productPrice}</span>
-                          {review.productOriginalPrice && review.productOriginalPrice > review.productPrice && (
-                            <span className="text-xs text-gray-500 line-through">${review.productOriginalPrice}</span>
-                          )}
-                        </div>
+                        <p className="text-sm font-bold text-blue-600">${review.productPrice}</p>
                       </div>
                     </div>
                   </div>
@@ -260,12 +202,12 @@ const ShowReview = () => {
                       <div className="flex items-center space-x-3">
                         <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
                           <span className="text-white font-semibold text-sm">
-                            {review.userName?.charAt(0).toUpperCase() || 'U'}
+                            {review.userName.charAt(0).toUpperCase()}
                           </span>
                         </div>
                         <div>
                           <h4 className="font-semibold text-gray-900">
-                            {review.userName || 'Anonymous User'}
+                            {review.userName}
                           </h4>
                           <p className="text-sm text-gray-500">
                             {new Date(review.date).toLocaleDateString('en-US', {
@@ -318,15 +260,8 @@ const ShowReview = () => {
             <svg className="h-12 w-12 text-gray-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              {reviews.length === 0 ? 'No Reviews Yet' : 'No Reviews Match Your Filters'}
-            </h3>
-            <p className="text-gray-600">
-              {reviews.length === 0 
-                ? 'Be the first to share your thoughts about our products!' 
-                : 'Try changing your filter settings to see more reviews.'
-              }
-            </p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No Reviews Found</h3>
+            <p className="text-gray-600">No reviews match your current filters.</p>
           </div>
         )}
       </div>

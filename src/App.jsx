@@ -20,6 +20,7 @@ import ProfilePage from './components/profile'
 import AdminPage from './components/Admin/AdminPage'
 import AddProduct from './components/Admin/pages/AddProduct'
 import ShowReview from './components/Admin/pages/ShowReview'
+import ManageProduct from './components/Admin/pages/ManageProduct'
 
 
 function Layout() {
@@ -85,6 +86,11 @@ function Layout() {
           <Route path="/admin/review" element={
           <ProtectedRoute>
           <ShowReview/>
+          </ProtectedRoute>
+          } />
+          <Route path="/admin/manage" element={
+          <ProtectedRoute>
+          <ManageProduct/>
           </ProtectedRoute>
           } />
         <Route path='/login' element={
